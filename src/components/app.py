@@ -10,14 +10,14 @@ from langchain.messages import AIMessage, HumanMessage
 from pyspark.sql import DataFrame, SparkSession
 
 try:
-    from src.card_kpis import (
+    from src.components.card_kpis import (
         get_connected_not_srs,
         get_disconnected,
         get_srs_ready_pct,
         total_equipment,
     )
 except ModuleNotFoundError:
-    from card_kpis import (  # type: ignore
+    from card_kpis import (
         get_connected_not_srs,
         get_disconnected,
         get_srs_ready_pct,
@@ -25,12 +25,12 @@ except ModuleNotFoundError:
     )
 
 try:
-    from src.sidebar import get_filters
+    from src.components.sidebar import get_filters
 except ModuleNotFoundError:
     from sidebar import get_filters
 
 try:
-    from src.viz import (
+    from src.components.viz import (
         business_line_adherence_viz,
         equipment_for_srs_activation_viz,
         excel_data,

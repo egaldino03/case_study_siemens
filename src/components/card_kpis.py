@@ -9,7 +9,7 @@ from pyspark.sql import DataFrame, SparkSession
 try:
     from .helpers import apply_filters, format_title_with_srs, get_data
 except ImportError:
-    from helpers import apply_filters, format_title_with_srs, get_data
+    from src.components.helpers import apply_filters, format_title_with_srs, get_data
 
 spark = SparkSession.builder.appName("Study Case Siemens").getOrCreate()
 

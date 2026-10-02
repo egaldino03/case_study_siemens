@@ -1,5 +1,5 @@
-from src.card_kpis import format_title_with_srs
-from src.sidebar import get_filters
+from src.components.card_kpis import format_title_with_srs
+from src.components.sidebar import get_filters
 
 
 def test_get_filters():

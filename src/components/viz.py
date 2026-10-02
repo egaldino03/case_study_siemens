@@ -11,7 +11,7 @@ from pyspark.sql import SparkSession
 try:
     from .helpers import apply_filters, get_data
 except ImportError:
-    from helpers import apply_filters, get_data
+    from src.components.helpers import apply_filters, get_data
 
 
 spark = SparkSession.builder.appName("Study Case Siemens").getOrCreate()

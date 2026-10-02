@@ -1,9 +1,9 @@
-from src.card_kpis import (
+from src.components.card_kpis import (
     get_connected_not_srs,
     get_srs_ready_pct,
     total_equipment,
 )
-from src.helpers import format_title_with_srs
+from src.components.helpers import format_title_with_srs
 
 
 def test_total_equipment():

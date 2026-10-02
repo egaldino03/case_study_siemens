@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 
-from src.helpers import apply_filters, format_title_with_srs, get_data
+from src.components.helpers import apply_filters, format_title_with_srs, get_data
 
 spark = SparkSession.builder.appName("Study Case Siemens").getOrCreate()
 

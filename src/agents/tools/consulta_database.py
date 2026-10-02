@@ -5,9 +5,9 @@ from langchain_openai import ChatOpenAI
 from pyspark.sql import SparkSession
 
 try:
-    from src.helpers import get_data
+    from src.components.helpers import get_data
 except ImportError:
-    from helpers import get_data
+    from components.helpers import get_data
 
 
 spark = (
