@@ -1,6 +1,6 @@
 import os
 
-from dotenv import load_dotenv
+import streamlit as st
 from langchain.agents import create_agent
 from langchain_openrouter import ChatOpenRouter
 
@@ -9,12 +9,10 @@ try:
 except ImportError:
     from src.agents.tools.consulta_database import execute_spark_sql
 
-import streamlit as st
 
 try:
     OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]
 except (FileNotFoundError, KeyError):
-    load_dotenv()
     OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 SYSTEM_PROMPT = """
