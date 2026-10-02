@@ -6,6 +6,7 @@ import polars as pl
 import pyspark.sql.functions as F
 import seaborn as sns
 import streamlit as st
+from langchain.messages import AIMessage, HumanMessage
 from pyspark.sql import DataFrame, SparkSession
 
 try:
@@ -42,6 +43,45 @@ except ModuleNotFoundError:
         excel_data,
         service_distribution_viz,
     )
+try:
+    from src.agents.executive_helper import get_agent
+except ModuleNotFoundError:
+    from agents.executive_helper import get_agent
+
+INITIAL_MESSAGE = (
+    "Olá! 👋 Sou seu Assistente Executivo.\n\n"
+    "Posso ajudar você a analisar **equipamentos, conectividade "
+    "SRS, regiões, estados, cidades e linhas de equipamentos**.\n\n"
+    "Faça uma pergunta sobre os dados do dashboard."
+)
+
+st.set_page_config(
+    page_title="Siemens Healthineers Monthly SRS follow-up Dashboard",
+    page_icon="📊",
+    layout="wide",
+)
+
+
+@st.cache_resource
+def load_agent():
+    return get_agent()
+
+
+agent = load_agent()
+
+if "messages" not in st.session_state:
+
+    st.session_state.messages = [AIMessage(content=INITIAL_MESSAGE)]
+
+
+def get_final_ai_message(messages):
+    """Retorna a ultima mensagem do agente."""
+    for message in reversed(messages):
+        if isinstance(message, AIMessage) and message.content:
+            return message
+
+    return None
+
 
 with st.sidebar:
     st.image(
@@ -78,6 +118,57 @@ st.markdown(
     "Acompanhamento mensal de equipamentos e metas de acesso remoto SRS",
     text_alignment="left",
 )
+
+chat_container = st.container(border=True)
+st.subheader("Assistente Executivo")
+with chat_container:
+    for message in st.session_state.messages:
+        if isinstance(message, HumanMessage):
+            role = "user"
+        elif isinstance(message, AIMessage):
+            role = "assistant"
+        else:
+            continue
+
+        with st.chat_message(role):
+            st.markdown(message.content)
+
+    user_input = st.chat_input("Pergunte sobre equipamentos, conectividade, região...")
+
+    if user_input:
+        human_message = HumanMessage(content=user_input)
+        st.session_state.messages.append(human_message)
+
+        with chat_container:
+            with st.chat_message("user"):
+                st.markdown(human_message.content)
+
+            with st.chat_message("assistant"):
+                with st.spinner("Analisando os dados..."):
+                    try:
+                        response = agent.invoke({"messages": st.session_state.messages})
+
+                        assistant_message = get_final_ai_message(response["messages"])
+                        if assistant_message is None:
+                            assistant_content = (
+                                "Não foi possível obter uma resposta do assistente"
+                            )
+                        else:
+                            assistant_content = assistant_message.content
+                        st.markdown(assistant_content)
+
+                        if assistant_message is not None:
+                            st.session_state.messages.append(assistant_message)
+                        else:
+                            st.session_state.messages.append(
+                                AIMessage(content=assistant_content)
+                            )
+                    except Exception as e:
+                        error_msg = (
+                            f"Ocorreu um erro ao consultar o assistente: {str(e)}"
+                        )
+                        st.error(error_msg)
+                        st.session_state.messages.append(AIMessage(content=error_msg))
 
 col1, col2 = st.columns(2)
 
@@ -118,7 +209,7 @@ col3.metric(
 col4.metric(
     label="Total desconectados".upper(),
     value=get_disconnected(filter_dict),
-    delta="Requer Infra",
+    delta="Requer Instalação de Infraestrutura",
     delta_color="red",
     format="localized",
     border=True,
