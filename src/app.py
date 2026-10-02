@@ -17,7 +17,7 @@ try:
         total_equipment,
     )
 except ModuleNotFoundError:
-    from card_kpis import (
+    from components.card_kpis import (
         get_connected_not_srs,
         get_disconnected,
         get_srs_ready_pct,
@@ -27,7 +27,7 @@ except ModuleNotFoundError:
 try:
     from src.components.sidebar import get_filters
 except ModuleNotFoundError:
-    from sidebar import get_filters
+    from components.sidebar import get_filters
 
 try:
     from src.components.viz import (
@@ -37,7 +37,7 @@ try:
         service_distribution_viz,
     )
 except ModuleNotFoundError:
-    from viz import (
+    from components.viz import (
         business_line_adherence_viz,
         equipment_for_srs_activation_viz,
         excel_data,
@@ -56,7 +56,7 @@ INITIAL_MESSAGE = (
 )
 
 st.set_page_config(
-    page_title="Siemens Healthineers Monthly SRS follow-up Dashboard",
+    page_title="Monitor de Conectividade Brasil",
     page_icon="📊",
     layout="wide",
 )
