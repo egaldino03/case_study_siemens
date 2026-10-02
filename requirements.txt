@@ -61,8 +61,6 @@ defusedxml==0.7.1
     # via nbconvert
 distro==1.9.0
     # via langsmith
-dotenv==0.9.9
-    # via study-case-siemens (pyproject.toml)
 et-xmlfile==2.0.0
     # via openpyxl
 executing==2.2.1
@@ -401,7 +399,7 @@ python-dateutil==2.9.0.post0
     #   matplotlib
     #   pandas
 python-dotenv==1.2.4
-    # via dotenv
+    # via study-case-siemens (pyproject.toml)
 python-env==1.0.0
     # via study-case-siemens (pyproject.toml)
 python-json-logger==4.2.0

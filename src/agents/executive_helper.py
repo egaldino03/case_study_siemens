@@ -4,11 +4,18 @@ from dotenv import load_dotenv
 from langchain.agents import create_agent
 from langchain_openrouter import ChatOpenRouter
 
-from .tools.consulta_database import execute_spark_sql
+try:
+    from .tools.consulta_database import execute_spark_sql
+except ImportError:
+    from src.agents.tools.consulta_database import execute_spark_sql
 
-load_dotenv()
+import streamlit as st
 
-OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
+try:
+    OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]
+except (FileNotFoundError, KeyError):
+    load_dotenv()
+    OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 SYSTEM_PROMPT = """
 Você é um analista de dados sênior trabalhando sobre uma tabela Spark
